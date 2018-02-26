@@ -10,10 +10,10 @@
   ],
   "author": "Munir Husseini",
   "license": "MIT",
-  "bugs": "https://github.com/mhusseini/Dryv/issues",
+  "bugs": "https://github.com/mhusseini/dryv-jquery-unobtrusive/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mhusseini/Dryv.git"
+    "url": "https://github.com/mhusseini/dryv-jquery-unobtrusive"
   },
   "main": "dist/app.js",
   "files": [
