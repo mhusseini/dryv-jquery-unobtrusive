@@ -1,0 +1,35 @@
+{
+  "name": "dryv-jquery-unobtrusive",
+  "version": "1.0.0-beta.1",
+  "description": "Dryv client-side validator for jQuery unobtrusive validation.",
+  "keywords": [
+    "asp.net",
+    "validation",
+    "dryv",
+    "unobtrusive"
+  ],
+  "author": "Munir Husseini",
+  "license": "MIT",
+  "bugs": "https://github.com/mhusseini/Dryv/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhusseini/Dryv.git"
+  },
+  "main": "dist/app.js",
+  "files": [
+    "dist/app.js",
+    "dist/app.min.js",
+    "README.md"
+  ],
+  "dependencies": {
+    "jquery-validation-unobtrusive": "^3.2.6"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^4.0.1",
+    "gulp-uglify": "^3.0.0",
+    "pump": "^3.0.0",
+    "typescript": "^2.7.2"
+  }
+}
