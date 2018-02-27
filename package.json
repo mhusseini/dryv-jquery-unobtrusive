@@ -15,10 +15,10 @@
     "type": "git",
     "url": "https://github.com/mhusseini/dryv-jquery-unobtrusive"
   },
-  "main": "dist/app.js",
+  "main": "dist/dryv-jquery-unobtrusive.js",
   "files": [
-    "dist/app.js",
-    "dist/app.min.js",
+    "dist/dryv-jquery-unobtrusive.js",
+    "dist/dryv-jquery-unobtrusive.min.js",
     "README.md"
   ],
   "dependencies": {

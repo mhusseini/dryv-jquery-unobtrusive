@@ -9,6 +9,7 @@ gulp.task("build", done => {
     pump([
         gulp.src("src/**/*.ts"),
         tsProject(),
+        rename({ basename: "dryv-jquery-unobtrusive" }),
         gulp.dest("dist"),
         uglify(),
         rename({ suffix: ".min" }),
