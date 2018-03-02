@@ -2,7 +2,7 @@
 
 Dryv client-side validator for jQuery unobtrusive validation. Use this library with ASP.NET client-side model validation and [Dryv](https://github.com/mhusseini/Dryv).
 
-[<img src="https://mhusseini.visualstudio.com/_apis/public/build/definitions/f04eca0f-a36d-48b6-b591-8bd1f6febee7/4/badge"/>](https://mhusseini.visualstudio.com/_apis/public/build/definitions/f04eca0f-a36d-48b6-b591-8bd1f6febee7/4/badge) ![npm](https://img.shields.io/npm/dt/dryv-jquery-unobtrusive.svg) ![npm](https://img.shields.io/npm/v/dryv-jquery-unobtrusive.svg)
+[![npm version](https://badge.fury.io/js/dryv-jquery-unobtrusive.svg)](https://badge.fury.io/js/dryv-jquery-unobtrusive)
 
 ## Installation
 ```
