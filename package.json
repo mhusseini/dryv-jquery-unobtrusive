@@ -28,6 +28,7 @@
     "@types/jquery-validation-unobtrusive": "^3.2.32",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
     "gulp-typescript": "^4.0.1",
     "gulp-uglify": "^3.0.0",
     "pump": "^3.0.0",
