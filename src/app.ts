@@ -1,5 +1,5 @@
 ﻿///<amd-module name="dryv-jquery-unobtrusive"/>
-import * as $ from "jquery";
+///<reference types="jquery" />
 
 const createFormHandler = (form: any) => {
     const handler = () => form.data("dryv-object", null);

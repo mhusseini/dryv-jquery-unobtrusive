@@ -4,12 +4,11 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define("dryv-jquery-unobtrusive", ["require", "exports", "jquery"], factory);
+        define(["require", "exports", "jquery"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ///<amd-module name="dryv-jquery-unobtrusive"/>
     var $ = require("jquery");
     var createFormHandler = function (form) {
         var handler = function () { return form.data("dryv-object", null); };
