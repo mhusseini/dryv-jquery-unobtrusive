@@ -8,9 +8,9 @@ Dryv client-side validator for jQuery unobtrusive validation. Use this library w
 ```
 npm install --save dryv-jquery-unobtrusive 
 ```
-... or download the JS file directly [from here](https://raw.githubusercontent.com/mhusseini/dryv-jquery-unobtrusive/master/dist/dryv-jquery-unobtrusive.min.js) into your project and reference it from your page:
+... or download the browser-sepcific JS file [from here](https://raw.githubusercontent.com/mhusseini/dryv-jquery-unobtrusive/master/dist/dryv-jquery-unobtrusive.browser.min.js) into your project and reference it from your page:
 ```
-<script src="js/dryv-jquery-unobtrusive.min.js"></script>
+<script src="js/dryv-jquery-unobtrusive.browser.min.js"></script>
 ```
 
 ## Usage
