@@ -1,30 +1,30 @@
 ﻿///<amd-module name="dryv-jquery-unobtrusive"/>
 ///<reference types="jquery" />
 
-const createFormHandler = (form: any) => {
-    const handler = () => form.data("dryv-object", null);
-    form.data("dryv-handler", handler)
-        .on("invalid-form", handler);
-}
-
-const createObject = (context: any) => {
-    const form = $(context.currentForm);
-    form.data("dryv-handler") || createFormHandler(form);
-
-    const obj = {};
-    for (let element of context.currentElements) {
-        const el = $(element);
-        obj[el.attr("name")] = el.val();
+(function () {
+    const createFormHandler = (form: any) => {
+        const handler = () => form.data("dryv-object", null);
+        form.data("dryv-handler", handler)
+            .on("invalid-form", handler);
     }
-    form.data("dryv-object", obj);
-    return obj;
-}
 
-const getObject = (context: any) =>
-    $(context.currentForm).data("dryv-object") ||
-    createObject(context);
+    const createObject = (context: any) => {
+        const form = $(context.currentForm);
+        form.data("dryv-handler") || createFormHandler(form);
 
-$(document).ready(() => {
+        const obj = {};
+        for (let element of context.currentElements) {
+            const el = $(element);
+            obj[el.attr("name")] = el.val();
+        }
+        form.data("dryv-object", obj);
+        return obj;
+    }
+
+    const getObject = (context: any) =>
+        $(context.currentForm).data("dryv-object") ||
+        createObject(context);
+
     $.validator.addMethod("dryv", function (_, element, functions) {
         const obj = getObject(this);
         const e = $(element);
@@ -47,4 +47,4 @@ $(document).ready(() => {
             console.error(`Failed to parse Dryv validation: ${ex}.\nThe expression that was parsed is:\n${options.message}`);
         }
     });
-});
+})();

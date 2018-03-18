@@ -1,25 +1,25 @@
-var createFormHandler = function (form) {
-    var handler = function () { return form.data("dryv-object", null); };
-    form.data("dryv-handler", handler)
-        .on("invalid-form", handler);
-};
-var createObject = function (context) {
-    var form = $(context.currentForm);
-    form.data("dryv-handler") || createFormHandler(form);
-    var obj = {};
-    for (var _i = 0, _a = context.currentElements; _i < _a.length; _i++) {
-        var element = _a[_i];
-        var el = $(element);
-        obj[el.attr("name")] = el.val();
-    }
-    form.data("dryv-object", obj);
-    return obj;
-};
-var getObject = function (context) {
-    return $(context.currentForm).data("dryv-object") ||
-        createObject(context);
-};
-$(document).ready(function () {
+(function () {
+    var createFormHandler = function (form) {
+        var handler = function () { return form.data("dryv-object", null); };
+        form.data("dryv-handler", handler)
+            .on("invalid-form", handler);
+    };
+    var createObject = function (context) {
+        var form = $(context.currentForm);
+        form.data("dryv-handler") || createFormHandler(form);
+        var obj = {};
+        for (var _i = 0, _a = context.currentElements; _i < _a.length; _i++) {
+            var element = _a[_i];
+            var el = $(element);
+            obj[el.attr("name")] = el.val();
+        }
+        form.data("dryv-object", obj);
+        return obj;
+    };
+    var getObject = function (context) {
+        return $(context.currentForm).data("dryv-object") ||
+            createObject(context);
+    };
     $.validator.addMethod("dryv", function (_, element, functions) {
         var obj = getObject(this);
         var e = $(element);
@@ -42,4 +42,4 @@ $(document).ready(function () {
             console.error("Failed to parse Dryv validation: " + ex + ".\nThe expression that was parsed is:\n" + options.message);
         }
     });
-});
+})();
