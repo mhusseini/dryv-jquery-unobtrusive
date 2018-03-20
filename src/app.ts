@@ -13,10 +13,10 @@
         form.data("dryv-handler") || createFormHandler(form);
 
         const obj = {};
-        for (let element of context.currentElements) {
+        $("input, select, textarea", form).each((_, element) => {
             const el = $(element);
             obj[el.attr("name")] = el.val();
-        }
+        });
         form.data("dryv-object", obj);
         return obj;
     }
@@ -32,7 +32,7 @@
         for (let fn of functions) {
             const error = fn(obj);
             if (error) {
-                e.data("msgDryv", error);
+                e.data("msgDryv", error.message || error);
                 return false;
             }
         }

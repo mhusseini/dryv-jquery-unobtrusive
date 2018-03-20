@@ -8,11 +8,10 @@
         var form = $(context.currentForm);
         form.data("dryv-handler") || createFormHandler(form);
         var obj = {};
-        for (var _i = 0, _a = context.currentElements; _i < _a.length; _i++) {
-            var element = _a[_i];
+        $("input, select, textarea", form).each(function (_, element) {
             var el = $(element);
             obj[el.attr("name")] = el.val();
-        }
+        });
         form.data("dryv-object", obj);
         return obj;
     };
@@ -28,7 +27,7 @@
             var fn = functions_1[_i];
             var error = fn(obj);
             if (error) {
-                e.data("msgDryv", error);
+                e.data("msgDryv", error.message || error);
                 return false;
             }
         }
