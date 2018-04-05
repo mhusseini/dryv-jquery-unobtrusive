@@ -12,10 +12,47 @@
         const form = $(context.currentForm);
         form.data("dryv-handler") || createFormHandler(form);
 
+        const regex = /(\w+)(\[(\d)\])?/;
         const obj = {};
         $("input, select, textarea", form).each((_, element) => {
+            let current = obj;
             const el = $(element);
-            obj[el.attr("name")] = el.val();
+            const names = el.attr("name").split(".");
+            const max = names.length - 1;
+            for (let i = 0; i < names.length; i++) {
+                const name = names[i];
+                const g = name.charAt(0).toLowerCase() + name.substr(1);
+                const m = regex.exec(g);
+                const field = m[1];
+                const index = m[3];
+                const parent = current;
+                current = current[field];
+                if (i < max) {
+                    if (!current) {
+                        current = index ? [] : {};
+                        parent[field] = current;
+                    }
+
+                    if (index) {
+                        const idx = Number(index);
+                        if (current[idx]) {
+                            current = current[idx];
+                        }
+                        else {
+                            current = current[idx] = {};
+                        }
+                    }
+                }
+                else if (index) {
+                    if (!current) {
+                        current = parent[field] = [];
+                    }
+                    current[Number(index)] = el.val();
+                }
+                else {
+                    parent[field] = el.val();
+                }
+            }
         });
         form.data("dryv-object", obj);
         return obj;

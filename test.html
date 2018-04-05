@@ -1,0 +1,28 @@
+<html>
+
+<body>
+    <form>
+        <input name="Person[0].Name" value="Dave">
+        <input name="Person[0].Jobs[0]" value="Drummer">
+        <input name="Person[0].Jobs[1]" value="Vocals">
+        <input name="Person[0].Jobs[2]" value="Guitar">
+
+        <button type="button" onclick="generateModel()">Generate model</button>
+    </form>
+    <pre id="output"></pre>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="dist/dryv-jquery-unobtrusive.browser.js"></script>
+    <script>
+        function generateModel() {
+            var o = window.createObject({
+                currentForm: $("form")[0]
+            });
+
+            $("#output").text(JSON.stringify(o, null, 4));
+        }
+    </script>
+</body>
+
+</html>
