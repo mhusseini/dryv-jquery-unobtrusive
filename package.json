@@ -9,7 +9,7 @@
     "unobtrusive"
   ],
   "author": "Munir Husseini",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": "https://github.com/mhusseini/dryv-jquery-unobtrusive/issues",
   "repository": {
     "type": "git",
@@ -18,7 +18,8 @@
   "main": "dist/dryv-jquery-unobtrusive.js",
   "files": [
     "dist/*.*",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dependencies": {
     "jquery-validation-unobtrusive": "^3.2.6"
