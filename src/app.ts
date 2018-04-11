@@ -2,10 +2,28 @@
 ///<reference types="jquery" />
 
 (function () {
-    const createFormHandler = (form: any) => {
-        const handler = () => form.data("dryv-object", null);
-        form.data("dryv-handler", handler)
-            .on("invalid-form", handler);
+    // const createFormHandler = (form: any) => {
+    //     const handler = () => form.data("dryv-object", null);
+    //     form.data("dryv-handler", handler)
+    //         .on("invalid-form", handler);
+    // };
+
+    const convert = (value, type) => {
+        switch (type) {
+            case "number": return Number(value);
+            case "boolean": value.toLowerCase() === "true" || !!value;
+            default: return value;
+        }
+    };
+    const getValue = ($el: JQuery<HTMLElement>) => {
+        const type = $el.attr("type").toLowerCase();
+        switch (type) {
+            case "checkbox":
+            case "radio":
+                return $el[0]["checked"];
+            default:
+                return convert($el.val(), $el.attr("data-type-dryv"));
+        }
     };
 
     const updateField = (element, obj) => {
@@ -39,34 +57,31 @@
                 if (!obj) {
                     obj = parent[field] = [];
                 }
-                obj[Number(index)] = el.val();
+                obj[Number(index)] = getValue(el);
             }
             else {
-                parent[field] = el.val();
+                parent[field] = getValue(el);
             }
         }
     };
 
-    const createObject = (context: any) => {
-        const form = $(context.currentForm);
-        form.data("dryv-handler") || createFormHandler(form);
-
+    const createObject = ($form) => {
         const obj = {};
-        $("input, select, textarea", form).each((_, element) => updateField(element, obj));
-        form.data("dryv-object", obj);
+        $("input, select, textarea", $form).each((_, element) => updateField(element, obj));
+        $form.data("dryv-object", obj);
         return obj;
     };
 
-    const getObject = (context: any) => {
+    const getObject = ($form) => {
         let existing;
-        const obj = (existing = $(context.currentForm).data("dryv-object"))
-            || createObject(context);
+        const obj = (existing = $form.data("dryv-object"))
+            || createObject($form);
         obj.isNew = !existing;
         return obj;
     };
 
     $.validator.addMethod("dryv", function (_, element, functions) {
-        const obj = getObject(this);
+        const obj = getObject($(this.currentForm));
         if (!obj.isNew) {
             updateField(element, obj);
         }
@@ -84,6 +99,20 @@
     });
 
     $.validator.unobtrusive.adapters.add("dryv", options => {
+        const form = options.form;
+        const $form = $(form);
+        if (!$form.data("dryv-init")) {
+            $form.data("dryv-init", true);
+            $form.bind("submit", function () { $(this).data("dryv-object", null); })
+
+            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])")
+                .each((i, el) => {
+                    $(el).change(function () {
+                        const obj = getObject($form);
+                        updateField(this, obj);
+                    });
+                });
+        }
         try {
             options.rules["dryv"] = eval(options.message);
         } catch (ex) {
