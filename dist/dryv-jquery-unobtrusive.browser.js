@@ -23,6 +23,9 @@
     };
     var updateField = function (element, obj) {
         var el = $(element);
+        if (el.data("dryv-ignore")) {
+            return;
+        }
         var names = el.attr("name").replace(/^\w|\.\w/g, function (m) { return m.toLowerCase(); }).split(".");
         var max = names.length - 1;
         for (var i = 0; i < names.length; i++) {
@@ -94,15 +97,18 @@
         if (!$form.data("dryv-init")) {
             $form.data("dryv-init", true);
             $form.bind("submit", function () { $(this).data("dryv-object", null); });
-            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])")
+            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])", $form)
                 .each(function (i, el) {
-                    $(el).change(function () {
-                        var obj = getObject($form);
-                        if (!obj.isNew) {
-                            updateField(this, obj);
-                        }
-                    });
+                if (el["type"] === "hidden" &&
+                    $("input[type=checkbox][name='" + el["name"] + "']", $form).length) {
+                    $(el).data("dryv-ignore", true);
+                    return;
+                }
+                $(el).change(function () {
+                    var obj = getObject($form);
+                    updateField(this, obj);
                 });
+            });
         }
         try {
             options.rules["dryv"] = eval(options.message);

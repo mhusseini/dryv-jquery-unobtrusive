@@ -28,6 +28,10 @@
 
     const updateField = (element, obj) => {
         const el = $(element);
+        if (el.data("dryv-ignore")) {
+            return;
+        }
+
         const names = el.attr("name").replace(/^\w|\.\w/g, m => m.toLowerCase()).split(".");
         const max = names.length - 1;
         for (let i = 0; i < names.length; i++) {
@@ -105,8 +109,14 @@
             $form.data("dryv-init", true);
             $form.bind("submit", function () { $(this).data("dryv-object", null); })
 
-            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])")
+            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])", $form)
                 .each((i, el) => {
+                    if (el["type"] === "hidden" &&
+                        $("input[type=checkbox][name='" + el["name"] + "']", $form).length) {
+                        $(el).data("dryv-ignore", true);
+                        return;
+                    }
+
                     $(el).change(function () {
                         const obj = getObject($form);
                         updateField(this, obj);
