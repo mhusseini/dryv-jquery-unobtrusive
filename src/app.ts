@@ -2,12 +2,6 @@
 ///<reference types="jquery" />
 
 (function () {
-    // const createFormHandler = (form: any) => {
-    //     const handler = () => form.data("dryv-object", null);
-    //     form.data("dryv-handler", handler)
-    //         .on("invalid-form", handler);
-    // };
-
     const convert = (value, type) => {
         switch (type) {
             case "number": return Number(value);
@@ -22,7 +16,7 @@
             case "radio":
                 return $el[0]["checked"];
             default:
-                return convert($el.val(), $el.attr("data-type-dryv"));
+                return convert($el.val(), $el.attr("data-val-dryv-type"));
         }
     };
 
