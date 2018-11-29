@@ -117,10 +117,12 @@
                     });
                 });
         }
-        try {
-            options.rules["dryv"] = eval(options.message);
-        } catch (ex) {
-            console.error(`Failed to parse Dryv validation: ${ex}.\nThe expression that was parsed is:\n${options.message}`);
+        const func = (window as any).dryv[options.message];
+        if (!func) {
+            console.error(`Cannot find Dryv validation function '${options.message}'.`);
+        }
+        else {
+            options.rules["dryv"] = func;
         }
     });
 })();

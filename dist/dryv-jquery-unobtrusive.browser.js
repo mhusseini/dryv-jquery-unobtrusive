@@ -1,9 +1,4 @@
 (function () {
-    // const createFormHandler = (form: any) => {
-    //     const handler = () => form.data("dryv-object", null);
-    //     form.data("dryv-handler", handler)
-    //         .on("invalid-form", handler);
-    // };
     var convert = function (value, type) {
         switch (type) {
             case "number": return Number(value);
@@ -18,7 +13,7 @@
             case "radio":
                 return $el[0]["checked"];
             default:
-                return convert($el.val(), $el.attr("data-type-dryv"));
+                return convert($el.val(), $el.attr("data-val-dryv-type"));
         }
     };
     var updateField = function (element, obj) {
@@ -110,11 +105,12 @@
                 });
             });
         }
-        try {
-            options.rules["dryv"] = eval(options.message);
+        var func = window.dryv[options.message];
+        if (!func) {
+            console.error("Cannot find Dryv validation function '" + options.message + "'.");
         }
-        catch (ex) {
-            console.error("Failed to parse Dryv validation: " + ex + ".\nThe expression that was parsed is:\n" + options.message);
+        else {
+            options.rules["dryv"] = func;
         }
     });
 })();

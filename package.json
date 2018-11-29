@@ -1,6 +1,6 @@
 {
   "name": "dryv-jquery-unobtrusive",
-  "version": "2.0.0",
+  "version": "3.0.0-alpha.1",
   "description": "Dryv client-side validator for jQuery unobtrusive validation.",
   "keywords": [
     "asp.net",
@@ -22,6 +22,7 @@
     "LICENSE"
   ],
   "dependencies": {
+    "g": "^2.0.1",
     "jquery-validation-unobtrusive": "^3.2.6"
   },
   "devDependencies": {
