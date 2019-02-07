@@ -21,7 +21,11 @@
         if (el.data("dryv-ignore")) {
             return;
         }
-        var names = el.attr("name").replace(/^\w|\.\w/g, function (m) { return m.toLowerCase(); }).split(".");
+        var name = el.attr("name");
+        if (!name) {
+            return;
+        }
+        var names = name.replace(/^\w|\.\w/g, function (m) { return m.toLowerCase(); }).split(".");
         var max = names.length - 1;
         for (var i = 0; i < names.length; i++) {
             var name_1 = names[i];
@@ -69,20 +73,21 @@
         obj.isNew = !existing;
         return obj;
     };
-    $.validator.addMethod("dryv", function (_, element, functions) {
+    $.validator.addMethod("dryv", function (_, element, message) {
+        var func = window.dryv[message];
+        if (!func) {
+            throw "Cannot find Dryv validation function '" + message + "'.";
+        }
         var obj = getObject($(this.currentForm));
         if (!obj.isNew) {
             updateField(element, obj);
         }
         var e = $(element);
         e.data("msgDryv", null);
-        for (var _i = 0, functions_1 = functions; _i < functions_1.length; _i++) {
-            var fn = functions_1[_i];
-            var error = fn(obj);
-            if (error) {
-                e.data("msgDryv", error.message || error);
-                return false;
-            }
+        var error = func(obj);
+        if (error) {
+            e.data("msgDryv", error.message || error);
+            return false;
         }
         return true;
     });
@@ -105,12 +110,6 @@
                 });
             });
         }
-        var func = window.dryv[options.message];
-        if (!func) {
-            console.error("Cannot find Dryv validation function '" + options.message + "'.");
-        }
-        else {
-            options.rules["dryv"] = func;
-        }
+        options.rules["dryv"] = options.message;
     });
 })();

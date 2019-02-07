@@ -26,7 +26,12 @@
             return;
         }
 
-        const names = el.attr("name").replace(/^\w|\.\w/g, m => m.toLowerCase()).split(".");
+        const name = el.attr("name");
+        if (!name) {
+            return;
+        }
+
+        const names = name.replace(/^\w|\.\w/g, m => m.toLowerCase()).split(".");
         const max = names.length - 1;
         for (let i = 0; i < names.length; i++) {
             const name = names[i];
@@ -78,19 +83,21 @@
         return obj;
     };
 
-    $.validator.addMethod("dryv", function (_, element, functions) {
+    $.validator.addMethod("dryv", function (_, element, message) {
+        const func = (window as any).dryv[message];
+        if (!func) {
+            throw `Cannot find Dryv validation function '${message}'.`;
+        }
         const obj = getObject($(this.currentForm));
         if (!obj.isNew) {
             updateField(element, obj);
         }
         const e = $(element);
         e.data("msgDryv", null);
-        for (let fn of functions) {
-            const error = fn(obj);
-            if (error) {
-                e.data("msgDryv", error.message || error);
-                return false;
-            }
+        const error = func(obj);
+        if (error) {
+            e.data("msgDryv", error.message || error);
+            return false;
         }
 
         return true;
@@ -103,7 +110,7 @@
             $form.data("dryv-init", true);
             $form.bind("submit", function () { $(this).data("dryv-object", null); })
 
-            $("input:not([data-val-dryv]), textarea:not([data-val-dryv])", $form)
+            $("input:not([data-val-dryv]), textarea:not([data-val-dryv]), select:not([data-val-dryv]), datalist:not([data-val-dryv]), button:not([data-val-dryv])", $form)
                 .each((i, el) => {
                     if (el["type"] === "hidden" &&
                         $("input[type=checkbox][name='" + el["name"] + "']", $form).length) {
@@ -117,12 +124,7 @@
                     });
                 });
         }
-        const func = (window as any).dryv[options.message];
-        if (!func) {
-            console.error(`Cannot find Dryv validation function '${options.message}'.`);
-        }
-        else {
-            options.rules["dryv"] = func;
-        }
+
+        options.rules["dryv"] = options.message;
     });
 })();
