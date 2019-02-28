@@ -77,8 +77,7 @@
 
     const getObject = ($form) => {
         let existing;
-        const obj = (existing = $form.data("dryv-object"))
-            || createObject($form);
+        const obj = (existing = $form.data("dryv-object")) || createObject($form);
         obj.isNew = !existing;
         return obj;
     };
@@ -92,12 +91,28 @@
         if (!obj.isNew) {
             updateField(element, obj);
         }
+
         const e = $(element);
-        e.data("msgDryv", null);
         const error = func(obj);
+
         if (error) {
             e.data("msgDryv", error.message || error);
+            if (error.type === "warning") {
+                const lastWarning = e.data("dryvWarning");
+                if (lastWarning === error.message) {
+                    e.data("dryvWarningCanIgnore", true);
+                    return true;
+                }
+
+                e.data("dryvWarning", error.message);
+            }
+            e.data("dryvWarningCanIgnore", null);
             return false;
+        }
+        else {
+            e.data("dryvWarningCanIgnore", null);
+            e.data("dryvWarning", null);
+            e.data("msgDryv", null);
         }
 
         return true;
@@ -127,4 +142,53 @@
 
         options.rules["dryv"] = options.message;
     });
+
+    const warningClass = "field-validation-warning";
+    $.validator.setDefaults({
+        highlight: (element: HTMLInputElement, errorClass: string, validClass: string) => {
+            $(element.form).find("*[data-valmsg-for=" + element.id + "]")
+                .addClass(!$(element).data("dryvWarning") ? errorClass : warningClass)
+                .removeClass(validClass);
+        },
+        unhighlight: (element: HTMLInputElement, errorClass: string, validClass: string) => {
+            $(element.form).find("*[data-valmsg-for=" + element.id + "]")
+                .removeClass(errorClass)
+                .removeClass(warningClass);
+        }
+    });
+    const proto = ($.validator as any).prototype;
+    const originalShowErrors = proto.defaultShowErrors;
+    proto.defaultShowErrors = function () {
+        const form = $(this.currentForm);
+        const successList = [];
+        const removeFromErrorList = [];
+
+        for (let element of this.successList) {
+            const e = $(element);
+            const message = e.data("dryvWarning");
+            if (!message) {
+                successList.push(element);
+                continue;
+            }
+
+            const item = {
+                message: message,
+                element: element
+            };
+            this.errorList.push(item);
+            if (e.data("dryvWarningCanIgnore")) {
+                removeFromErrorList.push(item);
+            }
+            form.find("*[data-valmsg-for=" + element.id + "]")
+                .addClass(warningClass)
+                .removeClass(this.settings.validClass);
+        }
+
+        this.successList = successList;
+        originalShowErrors.call(this);
+
+        for (let item of removeFromErrorList) {
+            this.errorList.splice(this.errorList.indexOf(item), 1);
+        }
+    };
 })();
