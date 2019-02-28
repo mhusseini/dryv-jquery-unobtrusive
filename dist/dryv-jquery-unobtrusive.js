@@ -136,22 +136,24 @@
             }
             options.rules["dryv"] = options.message;
         });
-        var warningClass = "field-validation-warning";
         $.validator.setDefaults({
             highlight: function (element, errorClass, validClass) {
                 $(element.form).find("*[data-valmsg-for=" + element.id + "]")
-                    .addClass(!$(element).data("dryvWarning") ? errorClass : warningClass)
+                    .addClass(!$(element).data("dryvWarning") ? errorClass : this.settings.warningClass)
                     .removeClass(validClass);
             },
             unhighlight: function (element, errorClass, validClass) {
                 $(element.form).find("*[data-valmsg-for=" + element.id + "]")
                     .removeClass(errorClass)
-                    .removeClass(warningClass);
+                    .removeClass(this.settings.warningClass);
             }
         });
         var proto = $.validator.prototype;
         var originalShowErrors = proto.defaultShowErrors;
         proto.defaultShowErrors = function () {
+            if (!this.settings.warningClass) {
+                this.settings.warningClass = "field-validation-warning";
+            }
             var form = $(this.currentForm);
             var successList = [];
             var removeFromErrorList = [];
@@ -172,7 +174,7 @@
                     removeFromErrorList.push(item);
                 }
                 form.find("*[data-valmsg-for=" + element.id + "]")
-                    .addClass(warningClass)
+                    .addClass(this.settings.warningClass)
                     .removeClass(this.settings.validClass);
             }
             this.successList = successList;

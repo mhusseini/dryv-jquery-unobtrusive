@@ -143,22 +143,24 @@
         options.rules["dryv"] = options.message;
     });
 
-    const warningClass = "field-validation-warning";
     $.validator.setDefaults({
-        highlight: (element: HTMLInputElement, errorClass: string, validClass: string) => {
+        highlight(element: HTMLInputElement, errorClass: string, validClass: string) {
             $(element.form).find("*[data-valmsg-for=" + element.id + "]")
-                .addClass(!$(element).data("dryvWarning") ? errorClass : warningClass)
+                .addClass(!$(element).data("dryvWarning") ? errorClass : this.settings.warningClass)
                 .removeClass(validClass);
         },
-        unhighlight: (element: HTMLInputElement, errorClass: string, validClass: string) => {
+        unhighlight(element: HTMLInputElement, errorClass: string, validClass: string) {
             $(element.form).find("*[data-valmsg-for=" + element.id + "]")
                 .removeClass(errorClass)
-                .removeClass(warningClass);
+                .removeClass(this.settings.warningClass);
         }
     });
     const proto = ($.validator as any).prototype;
     const originalShowErrors = proto.defaultShowErrors;
     proto.defaultShowErrors = function () {
+        if (!this.settings.warningClass) {
+            this.settings.warningClass = "field-validation-warning";
+        }
         const form = $(this.currentForm);
         const successList = [];
         const removeFromErrorList = [];
@@ -180,7 +182,7 @@
                 removeFromErrorList.push(item);
             }
             form.find("*[data-valmsg-for=" + element.id + "]")
-                .addClass(warningClass)
+                .addClass(this.settings.warningClass)
                 .removeClass(this.settings.validClass);
         }
 
